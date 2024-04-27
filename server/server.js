@@ -1,14 +1,13 @@
-require("dotenv").config();
+require("dotenv").config({
+    path: "../.env", //IMPORTANT: fixes the issue of env variables being undefined within separate directory. can also do path.join(__dirname, "..")
+});
 
 const express = require("express");
 const SpotifyWebAPI = require("spotify-web-api-node");
-const queryString = require("node:querystring");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
 const PORT = 4242;
-const CLIENT_ID = "a7d74f44a6174b56a37ad63b52cfef91";
-const CLIENT_SECRET = "d9e3610739d7497eadfab42dae8098e1";
 
 app.use(bodyParser.json());
 app.use(
@@ -21,8 +20,8 @@ app.post("/refresh", (request, response) => {
     const refreshToken = request.body.refreshToken;
     const spotifyAPI = new SpotifyWebAPI({
         redirectUri: "http://localhost:5173/callback",
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         refreshToken: refreshToken,
     });
     spotifyAPI
@@ -30,7 +29,6 @@ app.post("/refresh", (request, response) => {
         .then((data) => {
             console.log("Access token refreshed");
             console.log(data.body);
-            // spotifyAPI.setAccessToken(data.body.access_token);
             response.json({
                 accessToken: data.body.access_token,
                 expiresIn: data.body.expires_in,
@@ -46,8 +44,8 @@ app.post("/login", (request, response) => {
     console.log(code);
     const spotifyAPI = new SpotifyWebAPI({
         redirectUri: "http://localhost:5173/callback",
-        clientId: CLIENT_ID,
-        clientSecret: CLIENT_SECRET,
+        clientId: process.env.SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
     });
     spotifyAPI
         .authorizationCodeGrant(code)
