@@ -1,16 +1,9 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
+import Dashboard from "./Dashboard";
 import Login from "./Login";
 
+const code = new URLSearchParams(window.location.search).get("code");
+
 function App() {
-    const [count, setCount] = useState(0);
-
-    return (
-        <div className="App">
-            <Login />
-        </div>
-    );
+    return code ? <Dashboard code={code} /> : <Login />;
 }
-
 export default App;

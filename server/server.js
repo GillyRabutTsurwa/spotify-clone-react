@@ -17,6 +17,30 @@ app.use(
     })
 );
 
+app.post("/refresh", (request, response) => {
+    const refreshToken = request.body.refreshToken;
+    const spotifyAPI = new SpotifyWebAPI({
+        redirectUri: "http://localhost:5173/callback",
+        clientId: CLIENT_ID,
+        clientSecret: CLIENT_SECRET,
+        refreshToken: refreshToken,
+    });
+    spotifyAPI
+        .refreshAccessToken()
+        .then((data) => {
+            console.log("Access token refreshed");
+            console.log(data.body);
+            // spotifyAPI.setAccessToken(data.body.access_token);
+            response.json({
+                accessToken: data.body.access_token,
+                expiresIn: data.body.expires_in,
+            });
+        })
+        .catch((err) => {
+            console.error("Could not refresh accesss token", err);
+        });
+});
+
 app.post("/login", (request, response) => {
     const code = request.body.code;
     console.log(code);
@@ -25,28 +49,21 @@ app.post("/login", (request, response) => {
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
     });
-    spotifyAPI.authorizationCodeGrant(code).then((data) => {
-        response.json({
-            accessToken: data.body.access_token,
-            refreshToken: data.body.refresh_token,
-            expiresIn: data.body.expires_in,
+    spotifyAPI
+        .authorizationCodeGrant(code)
+        .then((data) => {
+            response.json({
+                accessToken: data.body.access_token,
+                refreshToken: data.body.refresh_token,
+                expiresIn: data.body.expires_in,
+            });
+        })
+        .catch((err) => {
+            console.error(err);
+        })
+        .finally(() => {
+            console.log("Done");
         });
-    });
-});
-
-app.get("/login", (request, response) => {
-    const scope =
-        "streaming user-read-email user-read-private user-library-read user-library-modify user-read-playback-state user-modify-playback-state";
-    const parsedParams = {
-        response_type: "code",
-        redirect_uri: "http://localhost:5173/callback",
-        client_id: CLIENT_ID,
-        scope: scope,
-    };
-
-    response.json({
-        url: "https://accounts.spotify.com/authorize?" + queryString.stringify(parsedParams),
-    });
 });
 
 app.listen(PORT, function (err) {
