@@ -25,19 +25,23 @@ export default function useAuth(code) {
 
     useEffect(() => {
         if (!refreshToken || !expiresIn) return;
-        axios
-            .post("http://localhost:4242/refresh", {
-                refreshToken: refreshToken,
-            })
-            .then((response) => {
-                console.log(response.data);
-                setAccessToken(response.data.accessToken);
-                setExpiresIn(response.data.expiresIn);
-            })
-            .catch((err) => {
-                console.error(err);
-                window.location = "/";
-            });
+        const interval = setInterval(() => {
+            axios
+                .post("http://localhost:4242/refresh", {
+                    refreshToken: refreshToken,
+                })
+                .then((response) => {
+                    console.log(response.data);
+                    setAccessToken(response.data.accessToken);
+                    setExpiresIn(response.data.expiresIn);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    window.location = "/";
+                });
+
+            return () => clearInterval(interval); //use a new interval when expiresIn or refreshToken changes before a refresh
+        }, (expiresIn - 60) * 1000);
     }, [refreshToken, expiresIn]);
 
     return accessToken;
