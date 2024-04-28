@@ -8,10 +8,15 @@ export default function Track(props) {
     };
 
     return (
-        <div onClick={playTrack} className="track" style={{ cursor: "pointer" }}>
+        <div onClick={playTrack} className="track">
+            <figure>
             <img src={track.albumImg} />
-            {/* <h4 key={track.id}>{track.title}</h4>
-            <p>{track.album}</p> */}
+            </figure>
+            <div className="blur">
+                <h4>{track.artist}</h4>
+                <i class="fa-solid fa-play"></i>
+                <h5>{track.title}</h5>
+            </div>
         </div>
     );
 }
