@@ -1,24 +1,35 @@
 import { useState, useEffect } from "react";
-import { Container } from "react-bootstrap";
 import SpotifyWebApi from "spotify-web-api-node";
 import useAuth from "./useAuth";
 import Player from "./Player";
 import Track from "./Track";
+import "./Dashboard.css";
 
 const spotifyAPI = new SpotifyWebApi({
-    clientId: "a7d74f44a6174b56a37ad63b52cfef91",
+    clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID
 });
+
+function randomArray(arr) {
+    let newArray = [];
+    // let numofPosts = 9;
+
+    while (newArray.length < arr.length) {
+        const randomNumber = Math.round(Math.random() * (arr.length - 1));
+        if (!newArray.includes(arr[randomNumber])) {
+            newArray.push(arr[randomNumber]);
+        }
+    }
+    return newArray;
+}
 
 export default function Dashboard(props) {
     const { code } = props;
-    const [search, setSearch] = useState("");
     const [results, setResults] = useState([]);
     const [playingTrack, setPlayingTrack] = useState();
     const accessToken = useAuth(code);
 
     function chooseTrack(track) {
         setPlayingTrack(track);
-        setSearch("");
     }
 
     console.log(accessToken);
@@ -29,45 +40,41 @@ export default function Dashboard(props) {
     }, [accessToken]);
 
     useEffect(() => {
-        if (!search) {
-            setResults([]);
-            return;
-        }
         if (!accessToken) return;
-
-        let cancel = false;
-        spotifyAPI.searchTracks(search).then((response) => {
-            if (cancel) return;
-            console.log(response.body.tracks.items);
-            const tracks = response.body.tracks.items.map((currentTrack) => {
-                const albumArtwork = currentTrack.album.images.find((currentAlbumImage) => currentAlbumImage.width === 300); // this will work for now
-                return {
-                    id: currentTrack.id,
-                    artist: currentTrack.artists[0].name,
-                    title: currentTrack.name,
-                    uri: currentTrack.uri,
-                    album: currentTrack.album.name,
-                    albumImg: albumArtwork.url,
-                };
+        spotifyAPI
+            .getPlaylist("00GNrKOUhzk1xanzyoWQhI", {
+                offset: 800,
+            })
+            .then((response) => {
+                console.log(response.body);
+                console.log(response.body.tracks.items);
+                const tracks = response.body.tracks.items.map((currentTrack) => {
+                    const albumArtwork = currentTrack.track.album.images.find((currentAlbumImage) => currentAlbumImage.width === 300);
+                    return {
+                        id: currentTrack.track.id,
+                        artist: currentTrack.track.artists[0].name,
+                        title: currentTrack.track.name,
+                        uri: currentTrack.track.uri,
+                        album: currentTrack.track.album.name,
+                        albumImg: albumArtwork.url,
+                    };
+                });
+                const randomTracks = randomArray(tracks);
+                setResults(randomTracks);
+            })
+            .catch((err) => {
+                console.error(err);
             });
-            setResults(tracks);
-            console.log(results);
-        });
-        console.log(accessToken);
-        return () => (cancel = true);
-    }, [search, accessToken]);
+    }, [accessToken]);
 
     return (
-        <Container className="d-flex flex-column py-2" style={{ height: "100vh " }}>
-            <div>
-                <input onChange={(e) => setSearch(e.target.value)} type="search" id="mySearch" name="search" placeholder="Search Songs" />
-            </div>
-            <div className="flex-grow-1 my-2" style={{ overflowY: "auto" }}>
+        <main className="container">
+            <div className="tracks-list">
                 {results.map((currentTrack) => {
                     return <Track track={currentTrack} key={currentTrack.id} chooseTrack={chooseTrack} />;
                 })}
             </div>
             <Player accessToken={accessToken} trackURI={playingTrack?.uri} />
-        </Container>
+        </main>
     );
 }

@@ -1,0 +1,11 @@
+.container {
+    height: 100dvh;
+}
+
+.tracks-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(25.5rem, 1fr));
+    width: 100%;
+    height: calc(100dvh - 80px);
+    overflow-y: scroll;
+}

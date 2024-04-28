@@ -1,4 +1,4 @@
-import React from "react";
+import "./Track.css";
 
 export default function Track(props) {
     const { track, chooseTrack } = props;
@@ -8,10 +8,10 @@ export default function Track(props) {
     };
 
     return (
-        <div onClick={playTrack} className="d-flex align-items-center" style={{ cursor: "pointer" }}>
+        <div onClick={playTrack} className="track" style={{ cursor: "pointer" }}>
             <img src={track.albumImg} />
-            <h4 key={track.id}>{track.title}</h4>
-            <p>{track.album}</p>
+            {/* <h4 key={track.id}>{track.title}</h4>
+            <p>{track.album}</p> */}
         </div>
     );
 }

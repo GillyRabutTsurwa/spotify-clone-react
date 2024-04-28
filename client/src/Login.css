@@ -1,0 +1,37 @@
+.container {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background-color: #0c2013;
+}
+
+.btn-login:link,
+.btn-login:visited {
+    display: flex;
+    align-items: center;
+    color: #d0adf0;
+    background-color: #0c2013;
+    border: 1px solid #d0adf0;
+    text-decoration: none;
+    padding: 1rem 2rem;
+    border-radius: 1rem;
+    font-size: 2.25rem;
+}
+
+.btn-login:hover,
+.btn-login:active {
+    color: #0c2013;
+    background-color: #d0adf0;
+    border: 1px solid transparent;
+}
+
+/* .btn-login span,
+.btn-login i {
+    color: currentColor;
+} */
+
+.btn-login span {
+    margin-right: 0.75rem;
+}
