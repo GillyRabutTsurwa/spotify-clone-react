@@ -1,6 +1,4 @@
-require("dotenv").config({
-    path: "../.env", //IMPORTANT: fixes the issue of env variables being undefined within separate directory. can also do path.join(__dirname, "..")
-});
+require("dotenv").config();
 
 const express = require("express");
 const SpotifyWebAPI = require("spotify-web-api-node");
