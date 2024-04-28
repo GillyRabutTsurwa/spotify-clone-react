@@ -10,7 +10,7 @@ export default function useAuth(code) {
 
     useEffect(() => {
         axios
-            .post("http://localhost:4242/login", {
+            .post(`http://localhost:4242/login`, {
                 code: code,
             })
             .then((response) => {
@@ -32,7 +32,7 @@ export default function useAuth(code) {
         console.log(refreshToken);
         const interval = setInterval(() => {
             axios
-                .post("http://localhost:4242/refresh", {
+                .post(`http://localhost:4242/refresh`, {
                     refreshToken: refreshToken,
                 })
                 .then((response) => {

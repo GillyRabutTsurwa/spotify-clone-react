@@ -14,6 +14,10 @@ app.use(
     })
 );
 
+app.get("/", (_, response) => {
+    response.send("Spotify Settings");
+});
+
 app.post("/refresh", (request, response) => {
     const refreshToken = request.body.refreshToken;
     const spotifyAPI = new SpotifyWebAPI({
