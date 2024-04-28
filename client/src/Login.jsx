@@ -1,7 +1,7 @@
 import "./Login.css";
 
 const DEV_CLIENT_URI = import.meta.env.VITE_DEV_CLIENT_REDIRECT_URI;
-const PROD_CLIENT_URI = import.meta.env.VITE_DEV_CLIENT_REDIRECT_URI;
+const PROD_CLIENT_URI = import.meta.env.VITE_PROD_CLIENT_REDIRECT_URI;
 
 const REDIRECT_URI = import.meta.env.DEV ? DEV_CLIENT_URI : PROD_CLIENT_URI;
 
