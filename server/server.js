@@ -12,14 +12,14 @@ const PORT = 4242;
 app.use(bodyParser.json());
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.CLIENT_URL,
     })
 );
 
 app.post("/refresh", (request, response) => {
     const refreshToken = request.body.refreshToken;
     const spotifyAPI = new SpotifyWebAPI({
-        redirectUri: "http://localhost:5173/callback",
+        redirectUri: process.env.CLIENT_REDIRECT_URI,
         clientId: process.env.SPOTIFY_CLIENT_ID,
         clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
         refreshToken: refreshToken,
@@ -36,16 +36,19 @@ app.post("/refresh", (request, response) => {
         })
         .catch((err) => {
             console.error("Could not refresh accesss token", err);
+        })
+        .finally(() => {
+            console.log("Done attempting access token refresh");
         });
 });
 
 app.post("/login", (request, response) => {
     const code = request.body.code;
-    console.log(code);
     const spotifyAPI = new SpotifyWebAPI({
-        redirectUri: "http://localhost:5173/callback",
+        redirectUri: process.env.CLIENT_REDIRECT_URI,
         clientId: process.env.SPOTIFY_CLIENT_ID,
         clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+        refreshToken: null,
     });
     spotifyAPI
         .authorizationCodeGrant(code)
@@ -57,10 +60,13 @@ app.post("/login", (request, response) => {
             });
         })
         .catch((err) => {
-            console.error(err);
+            const { body, statusCode } = err;
+            console.log(err);
+            console.error(body);
+            console.log(statusCode);
         })
         .finally(() => {
-            console.log("Done");
+            console.log("Done retrieval attempt of access token");
         });
 });
 
