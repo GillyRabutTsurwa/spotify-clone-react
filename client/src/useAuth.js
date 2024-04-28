@@ -10,7 +10,7 @@ export default function useAuth(code) {
 
     useEffect(() => {
         axios
-            .post("http://localhost:4242/login", {
+            .post(`${import.meta.env.VITE_SERVER_URL}/login`, {
                 code: code,
             })
             .then((response) => {
@@ -36,12 +36,14 @@ export default function useAuth(code) {
         console.log(refreshToken);
         const interval = setInterval(() => {
             axios
-                .post("http://localhost:4242/refresh", {
+                .post(`${import.meta.env.VITE_SERVER_URL}/refresh`, {
                     refreshToken: refreshToken,
                 })
                 .then((response) => {
                     console.log(response.data);
                     setAccessToken(response.data.accessToken);
+                    //NOTE: forgot to set new access token to sessionStorage, so i got an access token expired error. fixed
+                    sessionStorage.setItem("access_token", JSON.stringify(response.data.accessToken));
                     setExpiresIn(response.data.expiresIn);
                 })
                 .catch((err) => {
