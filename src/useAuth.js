@@ -9,43 +9,41 @@ export default function useAuth(code) {
     const [expiresIn, setExpiresIn] = useState();
 
     useEffect(() => {
-        axios
-            .post(`${import.meta.env.VITE_SERVER_URL}/login`, {
-                code: code,
-            })
-            .then((response) => {
+        (async () => {
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/login`, {
+                    code: code,
+                });
                 console.log(response.data);
                 setAccessToken(response.data.accessToken);
                 sessionStorage.setItem("access_token", JSON.stringify(response.data.accessToken));
                 setRefreshToken(response.data.refreshToken);
                 setExpiresIn(response.data.expiresIn);
-            })
-            .catch((err) => {
+            } catch (err) {
                 console.error(err);
                 window.location = "/";
-            });
+            }
+        })();
     }, [code]);
 
     useEffect(() => {
         if (!refreshToken || !expiresIn) return;
         console.log("Refresh Token");
         console.log(refreshToken);
-        const interval = setInterval(() => {
-            axios
-                .post(`${import.meta.env.VITE_SERVER_URL}/refresh`, {
+        const interval = setInterval(async () => {
+            // NOTE: i don't think that i need to make this into an IIFE because of the scope in which i am using axios
+            try {
+                const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/refresh`, {
                     refreshToken: refreshToken,
-                })
-                .then((response) => {
-                    console.log(response.data);
-                    setAccessToken(response.data.accessToken);
-                    sessionStorage.setItem("access_token", JSON.stringify(response.data.accessToken));
-                    setExpiresIn(response.data.expiresIn);
-                })
-                .catch((err) => {
-                    console.error(err);
-                    window.location = "/";
                 });
-
+                console.log(response.data);
+                setAccessToken(response.data.accessToken);
+                sessionStorage.setItem("access_token", JSON.stringify(response.data.accessToken));
+                setExpiresIn(response.data.expiresIn);
+            } catch (err) {
+                console.error(err);
+                window.location = "/";
+            }
             return () => clearInterval(interval);
         }, (expiresIn - 60) * 1000);
     }, [refreshToken, expiresIn]);

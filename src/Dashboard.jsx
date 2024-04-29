@@ -11,7 +11,6 @@ const spotifyAPI = new SpotifyWebApi({
 
 function randomArray(arr) {
     let newArray = [];
-    // let numofPosts = 9;
 
     while (newArray.length < arr.length) {
         const randomNumber = Math.round(Math.random() * (arr.length - 1));

@@ -1,16 +1,34 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./Login.css";
 
-const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=a7d74f44a6174b56a37ad63b52cfef91&response_type=code&redirect_uri=${
-    import.meta.env.VITE_CLIENT_REDIRECT_URI
-}&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing`;
 
 export default function Login() {
+    const [authURL, setAuthURL] = useState();
+    useEffect(() => {
+        const fetchAuthURL = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/authorisation`);
+                //NOTE: pour la ligne dessous, on peut chercher pour la valeur de "OK" de la propriété response.statusText
+                if (response.status !== 200) throw new Error("Something went wrong retrieving the authorisation URL");
+                const URL = response.data.url;
+                setAuthURL(URL);
+            } catch (err) {
+                console.error(err.message);
+            }
+        };
+      fetchAuthURL(); //NOTE: i know i could make this an IIFE, mais ça, ça me va
+    }, [])
+    
+    
     return (
         <div className="container">
-            <a href={AUTH_URL} className="btn-login">
-                <span>Login With Spotify</span>
-                <i class="fa-brands fa-spotify"></i>
+        {authURL ? (
+            <a href={authURL} className="btn-login">
+            <span>Login With Spotify</span>
+            <i className="fa-brands fa-spotify"></i>
             </a>
+        ) : <h4>Nothing for you here...</h4>}
         </div>
     );
 }
