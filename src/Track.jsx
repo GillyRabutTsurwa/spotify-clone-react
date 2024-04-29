@@ -14,7 +14,7 @@ export default function Track(props) {
             </figure>
             <div className="blur">
                 <h4>{track.artist}</h4>
-                <i class="fa-solid fa-play"></i>
+                <i className="fa-solid fa-play"></i>
                 <h5>{track.title}</h5>
             </div>
         </div>

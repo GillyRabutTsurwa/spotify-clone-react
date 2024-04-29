@@ -40,30 +40,28 @@ export default function Dashboard(props) {
 
     useEffect(() => {
         if (!accessToken) return;
-        spotifyAPI
-            .getPlaylist("00GNrKOUhzk1xanzyoWQhI", {
-                offset: 800,
-            })
-            .then((response) => {
-                console.log(response.body);
-                console.log(response.body.tracks.items);
-                const tracks = response.body.tracks.items.map((currentTrack) => {
-                    const albumArtwork = currentTrack.track.album.images.find((currentAlbumImage) => currentAlbumImage.width === 300);
-                    return {
-                        id: currentTrack.track.id,
-                        artist: currentTrack.track.artists[0].name,
-                        title: currentTrack.track.name,
-                        uri: currentTrack.track.uri,
-                        album: currentTrack.track.album.name,
-                        albumImg: albumArtwork.url,
-                    };
-                });
-                const randomTracks = randomArray(tracks);
-                setResults(randomTracks);
-            })
-            .catch((err) => {
-                console.error(err);
+        (async () => {
+            let songs = [];
+            let response = await spotifyAPI.getPlaylist("00GNrKOUhzk1xanzyoWQhI", {
+                offset: 0
             });
+            console.log(response)
+            console.log(response.body);
+            songs = response.body.tracks.items;
+            const tracks = songs.map((currentTrack) => {
+                const albumArtwork = currentTrack.track.album.images.find((currentAlbumImage) => currentAlbumImage.width === 300);
+                return {
+                    id: currentTrack.track.id,
+                    artist: currentTrack.track.artists[0].name,
+                    title: currentTrack.track.name,
+                    uri: currentTrack.track.uri,
+                    album: currentTrack.track.album.name,
+                    albumImg: albumArtwork.url,
+                };
+            });
+            const randomTracks = randomArray(tracks);
+            setResults(randomTracks);
+        })();
     }, [accessToken]);
 
     return (
