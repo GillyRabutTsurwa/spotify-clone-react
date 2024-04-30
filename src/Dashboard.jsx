@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import SpotifyWebApi from "spotify-web-api-node";
 import useAuth from "./useAuth";
 import Player from "./Player";
+import Navigation from "./Navigation";
 import Track from "./Track";
 import "./Dashboard.css";
 
 const spotifyAPI = new SpotifyWebApi({
-    clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID
+    clientId: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
 });
 
 function randomArray(arr) {
@@ -42,11 +43,7 @@ export default function Dashboard(props) {
         if (!accessToken) return;
         (async () => {
             let songs = [];
-            let response = await spotifyAPI.getPlaylist("00GNrKOUhzk1xanzyoWQhI", {
-                offset: 0
-            });
-            console.log(response)
-            console.log(response.body);
+            let response = await spotifyAPI.getPlaylist("00GNrKOUhzk1xanzyoWQhI");
             songs = response.body.tracks.items;
             const tracks = songs.map((currentTrack) => {
                 const albumArtwork = currentTrack.track.album.images.find((currentAlbumImage) => currentAlbumImage.width === 300);
@@ -66,6 +63,7 @@ export default function Dashboard(props) {
 
     return (
         <main className="container">
+            <Navigation />
             <div className="tracks-list">
                 {results.map((currentTrack) => {
                     return <Track track={currentTrack} key={currentTrack.id} chooseTrack={chooseTrack} />;

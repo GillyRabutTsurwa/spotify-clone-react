@@ -25,8 +25,8 @@ export default function Login() {
         <div className="container">
         {authURL ? (
             <a href={authURL} className="btn-login">
-            <span>Login With Spotify</span>
-            <i className="fa-brands fa-spotify"></i>
+                <span>Login With Spotify</span>
+                <i className="fa-brands fa-spotify"></i>
             </a>
         ) : <h4>Nothing for you here...</h4>}
         </div>

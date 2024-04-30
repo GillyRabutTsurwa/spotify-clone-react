@@ -1,0 +1,16 @@
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 7.5rem;
+    padding: 0 3rem;
+    font-size: 3rem;
+    color: #d0adf0;
+    background-color: #0c2013;
+}
+
+.link:link,
+.link:visited {
+    color: unset;
+}
