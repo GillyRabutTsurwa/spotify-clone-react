@@ -3,7 +3,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import useAuth from "./useAuth";
 import Player from "./Player";
 import Navigation from "./Navigation";
-import Track from "./Track";
+import Tracks from "./Tracks";
 import "./Dashboard.css";
 
 const spotifyAPI = new SpotifyWebApi({
@@ -64,11 +64,7 @@ export default function Dashboard(props) {
     return (
         <main className="container">
             <Navigation />
-            <div className="tracks-list">
-                {results.map((currentTrack) => {
-                    return <Track track={currentTrack} key={currentTrack.id} chooseTrack={chooseTrack} />;
-                })}
-            </div>
+            <Tracks tracks={results} chooseTrack={chooseTrack} />
             <Player accessToken={accessToken} trackURI={playingTrack?.uri} />
         </main>
     );
