@@ -5,7 +5,6 @@ export default function useAuth(code) {
     const storedAccessToken = JSON.parse(sessionStorage.getItem("access_token"));
 
     const [accessToken, setAccessToken] = useState(storedAccessToken || null);
-    const [refreshToken, setRefreshToken] = useState();
     const [expiresIn, setExpiresIn] = useState();
 
     useEffect(() => {
@@ -17,8 +16,7 @@ export default function useAuth(code) {
                 console.log(response.data);
                 setAccessToken(response.data.accessToken);
                 sessionStorage.setItem("access_token", JSON.stringify(response.data.accessToken));
-                setRefreshToken(response.data.refreshToken);
-                setExpiresIn(response.data.expiresIn);
+                setExpiresIn(response.data.expiresIn); //NOTE: j'en ai besoin vraiment ici ?
             } catch (err) {
                 console.error(err);
                 window.location = "/";
@@ -27,25 +25,20 @@ export default function useAuth(code) {
     }, [code]);
 
     useEffect(() => {
-        if (!refreshToken || !expiresIn) return;
-        console.log("Refresh Token");
-        console.log(refreshToken);
+        if (!expiresIn) return;
         const interval = setInterval(async () => {
-            // NOTE: i don't think that i need to make this into an IIFE because of the scope in which i am using axios
             try {
-                const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/refresh`, {
-                    refreshToken: refreshToken,
-                });
+                const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/refresh`);
                 console.log(response.data);
                 setAccessToken(response.data.accessToken);
                 sessionStorage.setItem("access_token", JSON.stringify(response.data.accessToken));
-                setExpiresIn(response.data.expiresIn);
+                setExpiresIn(response.data.expiresIn); // ici j'en ai besoin pour l'interval (minuteur)
             } catch (err) {
                 console.error(err);
                 window.location = "/";
             }
             return () => clearInterval(interval);
-        }, (expiresIn - 60) * 1000);
-    }, [refreshToken, expiresIn]);
+        }, (expiresIn + 60) * 1000); //NOTE: changing interval from 59 minutes to 60.5 minutes
+    }, []);
     return accessToken;
 }
