@@ -17,7 +17,7 @@ function randomArray(arr) {
     return newArray;
 }
 
-export default function Dashboard(props) {
+export default function Playlists(props) {
     const { code } = props;
     const [results, setResults] = useState([]);
     const [playingTrack, setPlayingTrack] = useState();
@@ -73,7 +73,7 @@ export default function Dashboard(props) {
             <Search inputChange={handleInputChange} formSubmit={handleFormSubmit} />
             <ul className="playlists-list">
                 {playlists.map((currentPlaylist) => {
-                    return <Playlist currentPlaylist={currentPlaylist} accessToken={accessToken} />;
+                    return <Playlist currentPlaylist={currentPlaylist} accessToken={accessToken} key={currentPlaylist.id} />;
                 })}
             </ul>
         </main>
