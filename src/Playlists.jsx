@@ -30,13 +30,14 @@ export default function Dashboard(props) {
         setPlayingTrack(track);
     }
 
-    function handleDataFromChild(data) {
-        console.log(data);
+    //NEWIMPORTANT: takes a payload coming from child component
+    function handleInputChange(payload) {
+        console.log(payload);
     }
 
-    //NEW
-    function handleChange(e) {
-        setUsername(e.target.value);
+    //NOTEIMPORTANT: celle fonction-ci aussi
+    function handleFormSubmit(payload) {
+        console.log(payload);
     }
 
     //NEW
@@ -81,8 +82,8 @@ export default function Dashboard(props) {
 
     return (
         <main className="container">
-            <Search sendToParent={handleDataFromChild} />
-            <form onSubmit={handleSubmit}>
+            <Search inputChange={handleInputChange} formSubmit={handleFormSubmit} />
+            {/* <form onSubmit={handleSubmit}>
                 <input
                     type="text"
                     onChange={handleChange}
@@ -94,7 +95,7 @@ export default function Dashboard(props) {
                 <button class="btn-search">
                     <i class="fas fa-search"></i>
                 </button>
-            </form>
+            </form> */}
             <ul className="playlists-list">
                 {playlists.map((currentPlaylist) => {
                     return (
