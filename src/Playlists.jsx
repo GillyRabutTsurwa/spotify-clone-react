@@ -33,18 +33,14 @@ export default function Dashboard(props) {
     //NEWIMPORTANT: takes a payload coming from child component
     function handleInputChange(payload) {
         console.log(payload);
+        setUsername(payload);
     }
 
     //NOTEIMPORTANT: celle fonction-ci aussi
     function handleFormSubmit(payload) {
         console.log(payload);
-    }
-
-    //NEW
-    function handleSubmit(e) {
-        e.preventDefault();
         if (!accessToken) return;
-        setUsername(e.target.elements.username.value);
+        setUsername(payload);
         (async () => {
             let response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/playlists`, {
                 user: username,
@@ -54,7 +50,6 @@ export default function Dashboard(props) {
             setPlaylists(randomArray(playlists));
         })();
         console.log(username);
-        setUsername("");
     }
 
     //NEW
@@ -62,8 +57,6 @@ export default function Dashboard(props) {
         const { id, name } = playlist;
         console.log({ name: name, id: id });
     }
-
-    console.log(accessToken);
 
     useEffect(() => {
         if (!accessToken) return;
@@ -83,19 +76,6 @@ export default function Dashboard(props) {
     return (
         <main className="container">
             <Search inputChange={handleInputChange} formSubmit={handleFormSubmit} />
-            {/* <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    onChange={handleChange}
-                    value={username}
-                    name="username"
-                    className="input-username"
-                    placeholder="Enter Spotify Username"
-                />
-                <button class="btn-search">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form> */}
             <ul className="playlists-list">
                 {playlists.map((currentPlaylist) => {
                     return (
