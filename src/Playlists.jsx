@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import useAuth from "./useAuth";
 import Search from "./Search";
+import Playlist from "./Playlist";
 import "./Playlists.css";
 
 function randomArray(arr) {
@@ -52,12 +53,6 @@ export default function Dashboard(props) {
         console.log(username);
     }
 
-    //NEW
-    function handleClick(playlist) {
-        const { id, name } = playlist;
-        console.log({ name: name, id: id });
-    }
-
     useEffect(() => {
         if (!accessToken) return;
         setUsername("tsurwagilly");
@@ -78,16 +73,7 @@ export default function Dashboard(props) {
             <Search inputChange={handleInputChange} formSubmit={handleFormSubmit} />
             <ul className="playlists-list">
                 {playlists.map((currentPlaylist) => {
-                    return (
-                        <li onClick={() => handleClick(currentPlaylist)} className="playlist">
-                            <figure>
-                                <img src={currentPlaylist.images[0].url} />
-                            </figure>
-                            <div className="blur">
-                                <h4>{currentPlaylist.name}</h4>
-                            </div>
-                        </li>
-                    );
+                    return <Playlist currentPlaylist={currentPlaylist} accessToken={accessToken} />;
                 })}
             </ul>
         </main>

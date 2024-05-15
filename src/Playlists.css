@@ -13,58 +13,6 @@
     overflow-y: scroll;
 }
 
-.playlist {
-    display: block;
-    position: relative;
-    /* cursor: pointer; */
-}
-
-.playlist:hover figure {
-    -webkit-filter: blur(5px);
-    filter: blur(5px);
-}
-
-.playlist:hover .blur {
-    opacity: 1;
-    visibility: visible;
-}
-
-figure {
-    width: 100%;
-    height: 100%;
-}
-
-img {
-    width: 100%;
-    height: 100%;
-    -o-object-fit: cover;
-    object-fit: cover;
-}
-
-.blur {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: grid;
-    place-items: center;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    -webkit-filter: blur(0);
-    filter: blur(0);
-    opacity: 0;
-    visibility: hidden;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: #fefefe;
-    font-size: 2rem;
-    transition: all 0.25s ease-in;
-    text-align: center;
-}
-
-.blur h4 {
-    font-size: 2.25rem;
-}
-
 .input-username {
     width: 300px;
     border: none;
