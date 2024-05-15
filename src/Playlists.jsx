@@ -80,8 +80,17 @@ export default function Dashboard(props) {
     return (
         <main className="container">
             <form onSubmit={handleSubmit}>
-                <input type="text" onChange={handleChange} value={username} name="username" id="username" placeholder="Enter Spotify Username" />
-                <input type="submit" value="Search" />
+                <input
+                    type="text"
+                    onChange={handleChange}
+                    value={username}
+                    name="username"
+                    className="input-username"
+                    placeholder="Enter Spotify Username"
+                />
+                <button class="btn-search">
+                    <i class="fas fa-search"></i>
+                </button>
             </form>
             <ul className="playlists-list">
                 {playlists.map((currentPlaylist) => {
