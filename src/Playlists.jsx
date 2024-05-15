@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import useAuth from "./useAuth";
-import Player from "./Player";
-import Navigation from "./Navigation";
-import Tracks from "./Tracks";
+import Search from "./Search";
 import "./Playlists.css";
 
 function randomArray(arr) {
@@ -30,6 +28,10 @@ export default function Dashboard(props) {
 
     function chooseTrack(track) {
         setPlayingTrack(track);
+    }
+
+    function handleDataFromChild(data) {
+        console.log(data);
     }
 
     //NEW
@@ -79,6 +81,7 @@ export default function Dashboard(props) {
 
     return (
         <main className="container">
+            <Search sendToParent={handleDataFromChild} />
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
