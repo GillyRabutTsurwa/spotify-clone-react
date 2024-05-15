@@ -19,8 +19,8 @@ function Search(props) {
     return (
         <form onSubmit={handleSubmit}>
             <input type="text" onChange={handleChange} value={user} name="username" className="input-username" placeholder="Enter Spotify Username" />
-            <button class="btn-search">
-                <i class="fas fa-search"></i>
+            <button className="btn-search">
+                <i className="fas fa-search"></i>
             </button>
         </form>
     );

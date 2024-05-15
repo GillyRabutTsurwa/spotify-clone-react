@@ -19,16 +19,38 @@ function randomArray(arr) {
 
 export default function Playlists(props) {
     const { code } = props;
-    const [results, setResults] = useState([]);
-    const [playingTrack, setPlayingTrack] = useState();
+    // const [results, setResults] = useState([]);
+    // const [playingTrack, setPlayingTrack] = useState();
     const [username, setUsername] = useState();
     const [playlists, setPlaylists] = useState([]);
     const accessToken = useAuth(code);
-    const categories = ["afrique", "house", "vapourwave", "liked"]; // NOTE: juste pour le moment
-    const randomIndex = Math.floor(Math.random() * categories.length); //NOTE: aussi juste pour le moment
+    // const categories = ["afrique", "house", "vapourwave", "liked"]; // NOTE: juste pour le moment
+    // const randomIndex = Math.floor(Math.random() * categories.length); //NOTE: aussi juste pour le moment
 
-    function chooseTrack(track) {
-        setPlayingTrack(track);
+    // function chooseTrack(track) {
+    //     setPlayingTrack(track);
+    // }
+
+    async function getSpotifyUser() {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/me`);
+        const data = response.data;
+        return data;
+    }
+
+    async function getUserPlaylists(spotifyUser) {
+        try {
+            // NOTE: code repetitive ici
+            let response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/playlists`, {
+                user: spotifyUser,
+            });
+            console.log(response);
+            const playlists = response.data;
+            setPlaylists(randomArray(playlists));
+        } catch (err) {
+            console.error(err);
+        } finally {
+            console.log(spotifyUser);
+        }
     }
 
     //NEWIMPORTANT: takes a payload coming from child component
@@ -38,34 +60,32 @@ export default function Playlists(props) {
     }
 
     //NOTEIMPORTANT: celle fonction-ci aussi
-    function handleFormSubmit(payload) {
+    async function handleFormSubmit(payload) {
         console.log(payload);
         if (!accessToken) return;
-        setUsername(payload);
-        (async () => {
+        const user = await getSpotifyUser();
+        setUsername(payload || user.id);
+        // NOTE: et ici. mais pour le moment ca se regle
+        try {
             let response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/playlists`, {
                 user: username,
             });
             console.log(response);
             const playlists = response.data;
             setPlaylists(randomArray(playlists));
-        })();
-        console.log(username);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            console.log(username);
+        }
     }
 
     useEffect(() => {
         if (!accessToken) return;
-        setUsername("tsurwagilly");
         (async () => {
-            let response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/playlists`, {
-                user: username,
-            });
-            console.log(response);
-            const playlists = response.data;
-            setPlaylists(randomArray(playlists));
+            const user = await getSpotifyUser();
+            await getUserPlaylists(user.id);
         })();
-        console.log(username);
-        setUsername("");
     }, [accessToken]);
 
     return (
