@@ -6,6 +6,7 @@ import Callback from "./Callback";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import Library from "./pages/library";
+import Test from "./pages/test";
 
 const router = createBrowserRouter([
     {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     {
         path: "/library",
         element: <Library />,
+    },
+    {
+        path: "/library/:id",
+        element: <Test />,
     },
 ]);
 

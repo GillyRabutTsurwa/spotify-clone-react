@@ -1,10 +1,19 @@
 import "./Playlist.css";
+import { useNavigate } from "react-router-dom";
 
 function Playlist(props) {
     const { currentPlaylist, accessToken } = props;
+    const navigate = useNavigate();
+
     function handleClick(playlist) {
         console.log(playlist);
         console.log(accessToken);
+        navigate(`/library/${currentPlaylist._id}`, {
+            state: {
+                playlist: currentPlaylist,
+                accessToken: accessToken,
+            },
+        });
     }
     return (
         <li onClick={() => handleClick(currentPlaylist)} className="playlist">
