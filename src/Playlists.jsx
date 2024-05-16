@@ -17,8 +17,8 @@ function randomArray(arr) {
     return newArray;
 }
 
-export default function Playlists(props) {
-    const { code } = props;
+export default function Playlists() {
+    const code = JSON.parse(sessionStorage.getItem("code"));
     // const [results, setResults] = useState([]);
     // const [playingTrack, setPlayingTrack] = useState();
     const [username, setUsername] = useState();

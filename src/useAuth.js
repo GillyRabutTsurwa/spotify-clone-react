@@ -17,6 +17,7 @@ export default function useAuth(code) {
                 setAccessToken(response.data.accessToken);
                 sessionStorage.setItem("access_token", JSON.stringify(response.data.accessToken));
                 setExpiresIn(response.data.expiresIn); //NOTE: j'en ai besoin vraiment ici ?
+                window.location.href = "/callback";
             } catch (err) {
                 console.error(err);
                 window.location = "/";
