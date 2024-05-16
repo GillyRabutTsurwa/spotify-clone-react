@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import "./Search.css";
 
 function Search(props) {
     const [user, setUser] = useState("");
