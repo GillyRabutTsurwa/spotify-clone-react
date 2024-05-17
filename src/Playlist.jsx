@@ -8,7 +8,7 @@ function Playlist(props) {
     function handleClick(playlist) {
         console.log(playlist);
         console.log(accessToken);
-        navigate(`/library/${currentPlaylist._id}`, {
+        navigate(`/library/${currentPlaylist.id}`, {
             state: {
                 playlist: currentPlaylist,
                 accessToken: accessToken,

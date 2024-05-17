@@ -51,7 +51,7 @@ function Test() {
 
     return (
         <>
-            <Navigation />
+            <Navigation playlistName={state.playlist.name} playlistOwner={state.playlist.owner.id} />
             <Tracks tracks={tracks} chooseTrack={chooseTrack} />
             <Player accessToken={accessToken} trackURI={playingTrack?.uri} />
         </>
